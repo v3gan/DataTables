@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/select/1.3.3/css/select.bootstrap4.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.js"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Basic DataTable</h1>
+      <div class="row mt-3">
+        <div class="col">
+          <div id="divYearList" class="collapse">
+            <h2>Academic Year List</h2>
+            <table
+              id="yearList"
+              class="table table-striped table-bordered nowrap"
+            ></table>
+          </div>
+          <div class="alert alert-warning collapse" id="divNoYearList">
+            <strong> No Records Found </strong>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col result"></div>
+      </div>
+    </div>
+    <script>
+      $(function () {
+        GetYearDataTable();
+      });
+
+      function GetYearDataTable() {
+        if ($.fn.dataTable.isDataTable("#yearList")) {
+          // the DataTable exists already, so just reload the data
+
+          $("#yearList").DataTable().ajax.reload();
+        } else {
+          var dt = $("#yearList")
+            .DataTable({
+              autoWidth: false, // we are going to define the width of the action button column
+              select: {
+                style: "single", // select a single row
+                selector: "td:not(.dt-action)", // don't select the row if we clicked on the action button column
+              },
+              ajax: {
+                url: "../data.json",
+                dataSrc: "", // empty string tells DataTables to expect an unnamed array
+                complete: function (xhr, status) {
+                  if (status === "success") {
+                    if (xhr.responseJSON.length) {
+                      $("#divYearList").show();
+                      $("#divNoYearList").hide();
+                    } else {
+                      $("#divYearList").hide();
+                      $("#divNoYearList").show();
+                    }
+                  }
+                },
+              },
+              columns: [
+                {
+                  data: "AcademicYearId",
+                  visible: false,
+                },
+                {
+                  title: "Academic Year",
+                  data: "AcademicYear",
+                },
+                {
+                  title: "Start Date",
+                  data: "StartDate",
+                },
+                {
+                  title: "End Date",
+                  data: "EndDate",
+                },
+                {
+                  title: "Year Link",
+                  data: "YearUrl",
+                  render: function (data, type, row) {
+                    return (
+                      '<a href="' + data + '">' + row.AcademicYear + "</a>"
+                    );
+                  },
+                },
+                {
+                  title: "Action",
+                  className: "dt-action",
+                  width: "10%",
+                  render: function (data, type, row) {
+                    return "<button class='btn btn-primary' type='button'>Show Year</button>";
+                  },
+                  defaultContent:
+                    "<button disabled class='btn btn-primary' type='button'>Show Year</button>",
+                },
+              ],
+            })
+            .on("select", (e, dt, type, indexes) => {
+              if (type === "row") {
+                // do this when a row is selected
+
+                var data = $("#yearList").DataTable().rows(indexes).data()[0];
+                ShowYear(data, "select handler");
+              }
+            });
+
+          // add delegated click handler for Action button
+
+          $("#yearList tbody").on("click", "button", function () {
+            var year = dt.row($(this).parents("tr")).data();
+            ShowYear(year, "button handler");
+          });
+        }
+      }
+
+      function ShowYear(yearData, source) {
+        var result = `<div class="alert alert-info">Academic year ${yearData.AcademicYear} starts on ${yearData.StartDate} according to <span class="text-danger">${source}</span>.</div>`;
+        $('.result').html(result)
+      }
+    </script>
+  </body>
+</html>
