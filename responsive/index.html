@@ -63,6 +63,27 @@
         } else {
           var dt = $("#yearList")
             .DataTable({
+              responsive: {
+                details: {
+                  renderer: function (api, rowIdx, columns) {
+                    var data = $.map(columns, function (col, i) {
+                      var thisRow = "";
+                      if (col.hidden) {
+                        if (col.className == "details-control") {
+                          thisRow = dt.row(rowIdx).data().MonthsHtml;
+                        } else {
+                          thisRow =
+                            `<tr><td><strong>${col.title}</strong></div>` +
+                            `<td class="wrap-normal">${col.data}</td></tr>`;
+                        }
+                      }
+                      return thisRow;
+                    }).join("");
+
+                    return data ? $("<table/>").append(data) : false;
+                  },
+                },
+              },
               autoWidth: false,
               ajax: {
                 url: "../data.json",
@@ -109,7 +130,7 @@
                   render: function (data, type, row) {
                     return `<a href="${data}">${row.AcademicYear}</a>`;
                   },
-                },
+                }
               ],
             })
             .on("draw", function () {

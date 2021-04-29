@@ -109,9 +109,7 @@
                   title: "Year Link",
                   data: "YearUrl",
                   render: function (data, type, row) {
-                    return (
-                      '<a href="' + data + '">' + row.AcademicYear + "</a>"
-                    );
+                    return `<a href="${data}">${row.AcademicYear}</a>`;
                   },
                 },
                 {
@@ -146,7 +144,7 @@
 
       function ShowYear(yearData, source) {
         var result = `<div class="alert alert-info">Academic year ${yearData.AcademicYear} starts on ${yearData.StartDate} according to <span class="text-danger">${source}</span>.</div>`;
-        $('.result').html(result)
+        $(".result").html(result);
       }
     </script>
   </body>
