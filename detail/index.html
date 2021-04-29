@@ -64,10 +64,6 @@
           var dt = $("#yearList")
             .DataTable({
               autoWidth: false,
-              select: {
-                style: "single", // select a single row
-                selector: "td:not(.dt-action)", // don't select the row if we clicked on the action button column
-              },
               ajax: {
                 url: "../data.json",
                 dataSrc: "", // empty string tells DataTables to expect an unnamed array
