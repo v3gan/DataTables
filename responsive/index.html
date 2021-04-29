@@ -4,16 +4,13 @@
     <title>Bootstrap Example</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="../lib/bootstrap/css/bootstrap.css"
-    />
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
     />
     <link
-      rel="stylesheet"      
+      rel="stylesheet"
       href="../lib/datatables/css/dataTables.bootstrap4.css"
     />
     <link
@@ -35,7 +32,10 @@
       <h2>Academic Year List</h2>
       <div class="row m-auto">
         <div id="divYearList" class="col-md-12 collapse">
-          <table id="yearList" class="table table-striped table-bordered nowrap"></table>          
+          <table
+            id="yearList"
+            class="table table-striped table-bordered nowrap"
+          ></table>
         </div>
         <div id="divNoYearList" class="alert alert-warning col-md-12 collapse">
           <strong> No Records Found </strong>
@@ -52,7 +52,6 @@
 
       function GetYearDataTable() {
         if ($.fn.dataTable.isDataTable("#yearList")) {
-          
           // the DataTable exists already, so just reload the data
 
           $("#yearList").DataTable().ajax.reload();
@@ -65,7 +64,7 @@
                     var data = $.map(columns, function (col, i) {
                       var thisRow = "";
                       if (col.hidden) {
-                        if (col.className == 'details-control') {
+                        if (col.className == "details-control") {
                           thisRow = dt.row(rowIdx).data().MonthsHtml;
                         } else {
                           thisRow =
@@ -76,7 +75,7 @@
                       return thisRow;
                     }).join("");
 
-                    return data ? $('<table/>').append(data) : false;
+                    return data ? $("<table/>").append(data) : false;
                   },
                 },
               },
