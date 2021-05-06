@@ -92,9 +92,9 @@
                 title: "Year Link",
                 data: "YearUrl",
                 render: function (data, type, row) {
-                  return `<a href="${data}">${row.AcademicYear}</a>`;
+                  return `<a href="${data}${row.AcademicYearId}">${row.AcademicYear}</a>`;
                 },
-              },
+              }
             ],
           });
         }

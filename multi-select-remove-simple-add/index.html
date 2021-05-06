@@ -17,8 +17,12 @@
       rel="stylesheet"
       href="../lib/datatables-responsive-bs/responsive.bootstrap4.css"
     />
+    <link
+      rel="stylesheet"
+      href="../lib/datatables-select-bs/select.bootstrap4.css"
+    />
     <style>
-      body{
+      body {
         background-color: lightgray;
       }
     </style>
@@ -30,11 +34,12 @@
     <script src="../lib/datatables-responsive/dataTables.responsive.js"></script>
     <script src="../lib/datatables-responsive-bs/responsive.bootstrap4.js"></script>
     <script src="../lib/datatables-buttons/js/dataTables.buttons.js"></script>
+    <script src="../lib/datatables-select/dataTables.select.js"></script>
     <script src="../scripts/site-scripts.js"></script>
   </head>
   <body>
     <div class="container-fluid mx-2">
-      <h1>Responsive DataTable</h1>
+      <h1>Multiple Selection Remove Rows and Simple Add Row</h1>
       <h2>Academic Year List</h2>
       <div class="row m-auto">
         <div id="divYearList" class="col-md-12 collapse">
@@ -69,6 +74,7 @@
               },
             },
             autoWidth: false,
+            select: 'multi',
             ajax: {
               url: "../data.json",
               dataSrc: "", // empty string tells DataTables to expect an unnamed array
@@ -93,6 +99,7 @@
               {
                 data: "AcademicYearId",
                 visible: false,
+                name: 'academic-year-id'
               },
               {
                 title: "Academic Year",
@@ -108,25 +115,6 @@
                 data: "EndDate",
               },
               {
-                title: "Placeholder 1",
-                defaultContent: "Taking",
-              },
-              {
-                title: "Placeholder 2",
-                defaultContent: "up",
-              },
-              {
-                title: "Placeholder 3",
-                defaultContent: "space",
-              },
-              {
-                title: "Show Months",
-                className: "details-control",
-                orderable: false,
-                data: null,
-                defaultContent: "N/A",
-              },
-              {
                 title: "Year Link",
                 data: "YearUrl",
                 render: function (data, type, row) {
@@ -136,36 +124,54 @@
             ],
             buttons: [
               {
-                text: "Dark Mode",
+                text: '<i class="bi bi-person-plus-fill"></i> Add Years',
                 attr: {
-                  class: "btn btn-dark mr-2",
+                  class: "btn btn-success btn-sm mr-2",
                 },
                 action: function (e, dt, node, config) {
-                  MakeDark();
+                  // get the number of rows in the table (dt parameter is a ref the DataTable)
+
+                  var totalRows = dt.data().length;
+
+                  // if there are rows; get the column with {name: 'academic-year-id'}, get it's data object, sort the data, reverse the sort and grab the first element in the array
+
+                  var maxYear =
+                    totalRows <= 0
+                      ? 2019
+                      : dt.column('academic-year-id:name').data().sort().reverse()[0];
+
+                  // create an object that looks like the table data
+
+                  var nextYear = parseInt(maxYear) + 1;
+
+                  var newRow = {
+                    AcademicYearId: nextYear,
+                    AcademicYear: maxYear + "-" + nextYear,
+                    StartDate: "09/01/" + maxYear,
+                    EndDate: "08/31/" + nextYear,
+                    YearUrl: "https://ampup.medschool.pitt.edu/" + nextYear,
+                  };
+
+                  // add the row, redraw the table
+
+                  dt.row.add(newRow).draw();
                 },
               },
               {
-                text: "Light Mode",
+                text:
+                  '<i class="bi bi-person-dash-fill"></i> Remove Selected Years',
                 attr: {
-                  class: "btn btn-light",
+                  class: "btn btn-danger btn-sm mr-2",
                 },
                 action: function (e, dt, node, config) {
-                  MakeLight();
+                  // get the selected rows, remove them, redraw the visible DataTable
+
+                  dt.rows({ selected: true }).remove().draw();
                 },
               },
             ],
           });
         }
-      }
-
-      function MakeDark() {
-        $("#yearList").addClass("table-dark");
-        $("#yearList").removeClass("table-light");
-      }
-
-      function MakeLight() {
-        $("#yearList").addClass("table-light");
-        $("#yearList").removeClass("table-dark");
       }
     </script>
   </body>

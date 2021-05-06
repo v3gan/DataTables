@@ -16,9 +16,16 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col text-center">
-          <h1>Happy 2020!</h1>
+          <h1>Happy <span id="spnYear"></span>!</h1>
         </div>
       </div>
     </div>
   </body>
 </html>
+<script>
+    $(function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        const year = urlParams.get('year');
+        $('#spnYear').html(year);
+    });
+</script>
