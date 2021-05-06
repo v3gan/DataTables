@@ -129,6 +129,7 @@
                   class: "btn btn-success btn-sm mr-2",
                 },
                 action: function (e, dt, node, config) {
+
                   // get the number of rows in the table (dt parameter is a ref the DataTable)
 
                   var totalRows = dt.data().length;
@@ -149,7 +150,7 @@
                     AcademicYear: maxYear + "-" + nextYear,
                     StartDate: "09/01/" + maxYear,
                     EndDate: "08/31/" + nextYear,
-                    YearUrl: "https://ampup.medschool.pitt.edu/" + nextYear,
+                    YearUrl: "../happy-year.html?year=",
                   };
 
                   // add the row, redraw the table
@@ -164,6 +165,7 @@
                   class: "btn btn-danger btn-sm mr-2",
                 },
                 action: function (e, dt, node, config) {
+
                   // get the selected rows, remove them, redraw the visible DataTable
 
                   dt.rows({ selected: true }).remove().draw();
