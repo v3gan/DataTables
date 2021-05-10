@@ -18,23 +18,29 @@
       href="../lib/datatables-responsive-bs/responsive.bootstrap4.css"
     />
     <style>
-      body{
+      body {
         background-color: lightgray;
       }
     </style>
     <script src="../lib/jquery/jquery.js"></script>
     <script src="../lib/popper/umd/popper.js"></script>
     <script src="../lib/bootstrap/js/bootstrap.js"></script>
+    <script src="../lib/jszip/jszip.js"></script>
+    <script src="../lib/pdfmake/pdfmake.js"></script>
+    <script src="../lib/pdfmake/vfs_fonts.js"></script>
     <script src="../lib/datatables/js/jquery.dataTables.js"></script>
     <script src="../lib/datatables/js/dataTables.bootstrap4.js"></script>
     <script src="../lib/datatables-responsive/dataTables.responsive.js"></script>
     <script src="../lib/datatables-responsive-bs/responsive.bootstrap4.js"></script>
     <script src="../lib/datatables-buttons/js/dataTables.buttons.js"></script>
+    <script src="../lib/datatables-buttons-bs/buttons.bootstrap4.js"></script>
+    <script src="../lib/datatables-buttons/js/buttons.html5.js"></script>
+    <script src="../lib/datatables-buttons/js/buttons.print.js"></script>
     <script src="../scripts/site-scripts.js"></script>
   </head>
   <body>
     <div class="container-fluid mx-2">
-      <h1>Responsive DataTable</h1>
+      <h1>Buttons</h1>
       <h2>Academic Year List</h2>
       <div class="row m-auto">
         <div id="divYearList" class="col-md-12 collapse">
@@ -132,7 +138,7 @@
                 render: function (data, type, row) {
                   return `<a href="${data}${row.AcademicYearId}">${row.AcademicYear}</a>`;
                 },
-              }
+              },
             ],
             buttons: [
               {
@@ -147,10 +153,24 @@
               {
                 text: "Light Mode",
                 attr: {
-                  class: "btn btn-light",
+                  class: "btn btn-light mr-2",
                 },
                 action: function (e, dt, node, config) {
                   MakeLight();
+                },
+              },
+              {
+                extend: "pdf",
+                text: '<i class="bi bi-file-earmark-arrow-down-fill"></i> PDF',
+                attr: {
+                  class: "btn btn-info mr-2",
+                },
+              },
+              {
+                extend: "excel",
+                text: '<i class="bi bi-file-earmark-excel-fill"></i> Excel',
+                attr: {
+                  class: "btn btn-info mr-2",
                 },
               },
             ],
