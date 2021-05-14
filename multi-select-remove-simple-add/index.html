@@ -24,7 +24,7 @@
     <style>
       body {
         background-color: lightgray;
-      }   
+      }
       .toaster {
         display: none;
       }
@@ -65,8 +65,7 @@
       </div>
       <div class="row">
         <div id="divYearListButtons" class="col-md-2 collapse year-list"></div>
-        <div id="divYearListMessage" class="col-md-5 collapse">
-          <div class="alert alert-info mb-0 border-0 py-2 text-center"></div>
+        <div id="divYearListMessage" class="col-md-5 toaster">
         </div>
       </div>
       <div class="row mx-auto">
@@ -196,17 +195,14 @@
 
                   selectedRows.remove().draw();
 
-                  // put a message in the alert
+                  // show a message
 
-                  $("#divYearListMessage .alert").html(
-                    `${selectedRowsCount} year${
-                      selectedRowsCount == 1 ? " was" : "s were"
-                    } removed.`
-                  );
+                  var message = `${selectedRowsCount} year${
+                    selectedRowsCount == 1 ? " was" : "s were"
+                  } removed.`;
+                  
+                  showToastMessage(message, 'divYearListMessage');
 
-                  // show the message for several seconds
-
-                  $("#divYearListMessage").fadeIn(500).delay(2000).fadeOut(500);
                 },
               },
             ],

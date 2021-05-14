@@ -17,7 +17,24 @@ function renderDefaultTable(api, rowIdx, columns) {
         false;
 }
 
-function 
+function showToastMessage(message, toasterId = ''){
+    var toaster;
+    
+    if(toasterId != ''){
+        toaster = $('#'+toasterId);
+    }
+    else{
+        toaster = $('.toaster');
+    }
+
+    var alert = $('<div class="alert alert-info mb-0 border-0 py-2 text-center"></alert>');
+
+    alert
+        .html(message)
+        .appendTo(toaster);
+
+    toaster.fadeIn(500).delay(2000).fadeOut(500, function(){$(this).empty()});
+}
 
 // jQuery plugin to re-adjust DataTables columns and recalcualte responsive breakpoints when going from hidden to shown
 
