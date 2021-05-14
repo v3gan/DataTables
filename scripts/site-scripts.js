@@ -17,6 +17,8 @@ function renderDefaultTable(api, rowIdx, columns) {
         false;
 }
 
+function 
+
 // jQuery plugin to re-adjust DataTables columns and recalcualte responsive breakpoints when going from hidden to shown
 
 (function ($) {

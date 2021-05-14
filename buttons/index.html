@@ -160,19 +160,25 @@
                 },
               },
               {
-                extend: "pdf",
+                extend: 'pdf',
                 text: '<i class="bi bi-file-earmark-arrow-down-fill"></i> PDF',
                 attr: {
                   class: "btn btn-info mr-2",
                 },
+                exportOptions: {
+                  columns: ':visible'
+                }
               },
               {
-                extend: "excel",
+                extend: 'excel',
                 text: '<i class="bi bi-file-earmark-excel-fill"></i> Excel',
                 attr: {
                   class: "btn btn-info mr-2",
                 },
-              },
+                exportOptions: {
+                  columns: ':visible'
+                }
+              }
             ],
           });
         }

@@ -24,6 +24,9 @@
     <style>
       body {
         background-color: lightgray;
+      }   
+      .toaster {
+        display: none;
       }
     </style>
     <script src="../lib/jquery/jquery.js"></script>
@@ -39,17 +42,31 @@
   </head>
   <body>
     <div class="container-fluid mx-2">
-      <h1>Multiple Selection Remove Rows and Simple Add Row</h1>
-      <h2>Academic Year List</h2>
+      <div class="row">
+        <div class="col">
+          <h1>Multiple Selection Remove Rows and Simple Add Row</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h2>Academic Year List</h2>
+        </div>
+      </div>
       <div class="row m-auto">
-        <div id="divYearList" class="col-md-12 collapse">
+        <div id="divYearList" class="col collapse year-list">
           <table
             id="yearList"
             class="table table-striped table-bordered nowrap table-light"
           ></table>
         </div>
-        <div id="divNoYearList" class="alert alert-warning col-md-12 collapse">
-          <strong> No Records Found </strong>
+        <div class="col collapse" id="divNoYearList">
+          <div class="alert alert-warning">No Records Found</div>
+        </div>
+      </div>
+      <div class="row">
+        <div id="divYearListButtons" class="col-md-2 collapse year-list"></div>
+        <div id="divYearListMessage" class="col-md-5 collapse">
+          <div class="alert alert-info mb-0 border-0 py-2 text-center"></div>
         </div>
       </div>
       <div class="row mx-auto">
@@ -74,17 +91,17 @@
               },
             },
             autoWidth: false,
-            select: 'multi',
+            select: "multi",
             ajax: {
               url: "../data.json",
               dataSrc: "", // empty string tells DataTables to expect an unnamed array
               complete: function (xhr, status) {
                 if (status === "success") {
                   if (xhr.responseJSON.length) {
-                    $("#divYearList").showDataTable();
+                    $(".year-list").showDataTable();
                     $("#divNoYearList").hide();
                   } else {
-                    $("#divYearList").hide();
+                    $(".year-list").hide();
                     $("#divNoYearList").show();
                   }
                 }
@@ -92,14 +109,14 @@
                   .container()
                   .addClass("mb-1")
                   .removeClass("btn-group")
-                  .appendTo($("#divYearList"));
+                  .appendTo($("#divYearListButtons"));
               },
             },
             columns: [
               {
                 data: "AcademicYearId",
                 visible: false,
-                name: 'academic-year-id'
+                name: "academic-year-id",
               },
               {
                 title: "Academic Year",
@@ -120,7 +137,7 @@
                 render: function (data, type, row) {
                   return `<a href="${data}${row.AcademicYearId}">${row.AcademicYear}</a>`;
                 },
-              }
+              },
             ],
             buttons: [
               {
@@ -129,7 +146,6 @@
                   class: "btn btn-success btn-sm mr-2",
                 },
                 action: function (e, dt, node, config) {
-
                   // get the number of rows in the table (dt parameter is a ref the DataTable)
 
                   var totalRows = dt.data().length;
@@ -139,7 +155,11 @@
                   var maxYear =
                     totalRows <= 0
                       ? 2019
-                      : dt.column('academic-year-id:name').data().sort().reverse()[0];
+                      : dt
+                          .column("academic-year-id:name")
+                          .data()
+                          .sort()
+                          .reverse()[0];
 
                   // create an object that looks like the table data
 
@@ -147,10 +167,10 @@
 
                   var newRow = {
                     AcademicYearId: nextYear,
-                    AcademicYear: maxYear + '-' + nextYear,
-                    StartDate: '09/01/' + maxYear,
-                    EndDate: '08/31/' + nextYear,
-                    YearUrl: '../happy-year.html?year=',
+                    AcademicYear: maxYear + "-" + nextYear,
+                    StartDate: "09/01/" + maxYear,
+                    EndDate: "08/31/" + nextYear,
+                    YearUrl: "../happy-year.html?year=",
                   };
 
                   // add the row, redraw the table
@@ -159,16 +179,34 @@
                 },
               },
               {
-                text:
-                  '<i class="bi bi-person-dash-fill"></i> Remove Selected Years',
+                text: '<i class="bi bi-person-dash-fill"></i> Remove Selected Years',
                 attr: {
                   class: "btn btn-danger btn-sm mr-2",
                 },
                 action: function (e, dt, node, config) {
+                  // get the selected rows
 
-                  // get the selected rows, remove them, redraw the visible DataTable
+                  var selectedRows = dt.rows({ selected: true });
 
-                  dt.rows({ selected: true }).remove().draw();
+                  // get the number of rows selected
+
+                  var selectedRowsCount = selectedRows.count();
+
+                  // remove the selected rows and redraw the table
+
+                  selectedRows.remove().draw();
+
+                  // put a message in the alert
+
+                  $("#divYearListMessage .alert").html(
+                    `${selectedRowsCount} year${
+                      selectedRowsCount == 1 ? " was" : "s were"
+                    } removed.`
+                  );
+
+                  // show the message for several seconds
+
+                  $("#divYearListMessage").fadeIn(500).delay(2000).fadeOut(500);
                 },
               },
             ],
