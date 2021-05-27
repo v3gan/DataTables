@@ -1,0 +1,26 @@
+[
+  {
+    "StudentId": "1",
+    "FirstName": "Charles",
+    "LastName": "Xavier",
+    "Email": "profx@gmail.com"
+  },
+  {
+    "StudentId": "2",
+    "FirstName": "Eric",
+    "LastName": "Lehnsherr",
+    "Email": "magman@gmail.com"
+  },
+  {
+    "StudentId": "3",
+    "FirstName": "James",
+    "LastName": "Howlett",
+    "Email": "logan@gmail.com"
+  },
+  {
+    "StudentId": "4",
+    "FirstName": "Jean",
+    "LastName": "Grey",
+    "Email": "pheonix@gmail.com"
+  }
+]

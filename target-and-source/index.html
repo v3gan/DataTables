@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DataTables Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../lib/datatables/css/dataTables.bootstrap4.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../lib/datatables-responsive-bs/responsive.bootstrap4.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../lib/datatables-select-bs/select.bootstrap4.css"
+    />
+    <style>
+      body {
+        background-color: lightgray;
+      }
+      .toaster {
+        display: none;
+      }
+    </style>
+    <script src="../lib/jquery/jquery.js"></script>
+    <script src="../lib/popper/umd/popper.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.js"></script>
+    <script src="../lib/datatables/js/jquery.dataTables.js"></script>
+    <script src="../lib/datatables/js/dataTables.bootstrap4.js"></script>
+    <script src="../lib/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="../lib/datatables-responsive-bs/responsive.bootstrap4.js"></script>
+    <script src="../lib/datatables-buttons/js/dataTables.buttons.js"></script>
+    <script src="../lib/datatables-select/dataTables.select.js"></script>
+    <script src="../scripts/site-scripts.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid mx-3">
+      <div class="row">
+        <div class="col">
+          <h1>Add Data to a DataTable From Another DataTable</h1>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div id="divTargetStudentList" class="col-10">
+          <h2 class="my-4">Target DataTable</h2>
+          <table
+            id="targetStudentList"
+            class="table table-striped table-bordered nowrap table-light"
+          ></table>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="row">
+            <div id="divTargetStudentListButtons" class="col-3"></div>
+            <div id="divTargetStudentListMessage" class="col-5"></div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="sourceStudentListModal"
+        class="modal fade"
+        tabindex="-1"
+        aria-hidden="true"
+        aria-labelledby="sourceStudentListModalLabel"
+      >
+        <div class="modal-dialog modal-dialog-centered mw-100 w-75">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="sourceStudentListModalLabel">
+                Source DataTable
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div
+                  id="divSourceStudentList"
+                  class="col collapse source-student-list"
+                >
+                  <table
+                    id="sourceStudentList"
+                    class="table table-striped table-bordered nowrap"
+                  ></table>
+                </div>
+                <div class="col collapse" id="divNOSourceStudentList">
+                  <div class="alert alert-warning">No Records Found</div>
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  id="divSourceStudentListButtons"
+                  class="col-md-2 collapse source-student-list"
+                ></div>
+                <div
+                  id="divSourceStudentListMessage"
+                  class="col-md-5"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(function () {
+        CreateTargetDataTable();
+      });
+
+      function CreateTargetDataTable() {
+        var dt = $("#targetStudentList").DataTable({
+            responsive: {
+              details: {
+                renderer: renderDefaultTable,
+              },
+            },
+            autoWidth: false,
+            select: 'multi',
+            columns: [
+              {
+                title: "Student Id",
+                data: "StudentId",
+                name: "student-id",
+              },
+              {
+                title: "First Name",
+                data: "FirstName",
+              },
+              {
+                title: "Last Name",
+                data: "LastName",
+              },
+              {
+                title: "Email",
+                data: "Email",
+              },
+            ],
+            buttons: [
+            {
+                text: '<i class="bi bi-person-plus-fill"></i> Add Students',
+                attr: {
+                  class: "btn btn-success btn-sm mr-2",
+                },
+                action: function (e, dt, node, config) {
+                  CreateSourceDataTable();
+                  $('#sourceStudentListModal').modal();
+                }
+              },
+              {
+                text: '<i class="bi bi-person-dash-fill"></i> Remove Selected Students',
+                attr: {
+                  class: "btn btn-danger btn-sm mr-2",
+                },
+                action: function (e, dt, node, config) {
+                  // get the selected rows
+
+                  var selectedRows = dt.rows({ selected: true });
+
+                  // get the number of rows selected
+
+                  var selectedRowsCount = selectedRows.count();
+
+                  // remove the selected rows and redraw the table
+
+                  selectedRows.remove().draw();
+
+                  // show a message
+
+                  var message = `${selectedRowsCount} student${
+                    selectedRowsCount == 1 ? " was" : "s were"
+                  } removed.`;
+
+                  showToastAlertMessage(message, "divTargetStudentListMessage");
+                },
+              }
+            ],
+            initComplete: function(settings, json){
+              var dt = $("#targetStudentList").DataTable();
+              dt.buttons().container()
+                        .addClass('mb-1')
+                        .removeClass('btn-group')
+                        .appendTo($('#divTargetStudentListButtons'));
+            }
+          });
+      }
+
+      function CreateSourceDataTable() {
+        if ($.fn.dataTable.isDataTable("#sourceStudentList")) {
+          $("#sourceStudentList").DataTable().ajax.reload();
+        } else {
+          var dt = $("#sourceStudentList").DataTable({
+            responsive: {
+              details: {
+                renderer: renderDefaultTable,
+              },
+            },
+            select: "multi",
+            autoWidth: false,
+            ajax: {
+              url: "../students.json",
+              dataSrc: "",
+              complete: function (xhr, status) {
+                if (status === "success") {
+                  if (xhr.responseJSON.length) {
+                    $(".source-student-list").showDataTable();
+                    $("#divNoSourceStudentList").hide();
+                  } else {
+                    $(".source-student-list").hide();
+                    $("#divNoSourceStudentList").show();
+                  }
+                }
+              }
+            },      
+            initComplete: function(settings, json){              
+              var dt = $("#sourceStudentList").DataTable();
+              dt.buttons().container()
+                        .addClass('mb-1')
+                        .removeClass('btn-group')
+                        .appendTo($('#divSourceStudentListButtons'));
+            },
+            columns: [
+              {
+                title: "Student Id",
+                data: "StudentId",
+              },
+              {
+                title: "First Name",
+                data: "FirstName",
+              },
+              {
+                title: "Last Name",
+                data: "LastName",
+              },
+              {
+                title: "Email",
+                data: "Email",
+              },
+            ],
+            buttons: [
+              {
+                text: "Add Selected",
+                attr: {
+                  class: "btn btn-success mr-2",
+                },
+                action: function (e, dt, node, config) {
+                  AddRowsToParentDataTable(
+                    dt.rows({ selected: true }).data().toArray()
+                  );
+                },
+              },
+              {
+                text: "Add All",
+                attr: {
+                  class: "btn btn-success",
+                },
+                action: function (e, dt, node, config) {
+                  AddRowsToParentDataTable(dt.rows().data().toArray());
+                },
+              },
+            ],
+          });
+        }
+      }
+
+      function AddRowsToParentDataTable(inserting) {
+        // get a reference to the "parent" DataTable
+
+        var dtTarget = $("#targetStudentList").DataTable();
+
+        // store the data in the column with {name: student-id} in an array
+
+        var existing = dtTarget.column("student-id:name").data().toArray();
+
+        // var to keep track of the number of students that are in both the "parent" DataTable and the inserting rows
+
+        var dupsCount = 0;
+        var insertedCount = inserting.length;
+
+        // loop through the rows we want to insert
+
+        inserting.forEach(function (rowInserting) {
+          // loop through the existing student IDs to check for duplicates
+
+          for (i = 0; i < existing.length; i++) {
+            if (rowInserting.StudentId === existing[i]) {
+              dupsCount++;
+              return;
+            }
+          }
+
+          // add the row if we made it here
+
+          dtTarget.row.add(rowInserting);
+        });
+
+        // let the user know that there were duplicates
+
+        insertedCount -= dupsCount;
+
+        var message = `${insertedCount} student${
+          insertedCount == 1 ? " was" : "s were"
+        } added. ${dupsCount} student${
+          dupsCount == 1 ? " was" : "s were"
+        } skipped because they were already in the list.`;
+
+        showToastAlertMessage(message, "divSourceStudentListMessage");
+
+        // redraw the "parent" DataTable to show the new rows
+
+        dtTarget.draw();
+      }
+    </script>
+  </body>
+</html>

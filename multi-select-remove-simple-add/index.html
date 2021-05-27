@@ -65,8 +65,7 @@
       </div>
       <div class="row">
         <div id="divYearListButtons" class="col-md-2 collapse year-list"></div>
-        <div id="divYearListMessage" class="col-md-5 toaster">
-        </div>
+        <div id="divYearListMessage" class="col-md-5 toaster"></div>
       </div>
       <div class="row mx-auto">
         <div class="col result"></div>
@@ -175,7 +174,7 @@
                   // add the row, redraw the table
 
                   dt.row.add(newRow).draw();
-                },
+                }
               },
               {
                 text: '<i class="bi bi-person-dash-fill"></i> Remove Selected Years',
@@ -200,11 +199,10 @@
                   var message = `${selectedRowsCount} year${
                     selectedRowsCount == 1 ? " was" : "s were"
                   } removed.`;
-                  
-                  showToastMessage(message, 'divYearListMessage');
 
+                  showToastAlertMessage(message, "divYearListMessage");
                 },
-              },
+              }
             ],
           });
         }

@@ -17,23 +17,33 @@ function renderDefaultTable(api, rowIdx, columns) {
         false;
 }
 
-function showToastMessage(message, toasterId = ''){
+// show messages that fade in and out using an element with the given id or all .toaster elements
+// the alertType should match Bootstrap/custom themes (info, success, danger, warning, etc.)
+// the "toaster" element should be empty
+
+function showToastAlertMessage(message, toasterId = '', alertType = 'info') {
+    console.log(message, alertType, toasterId);
+
     var toaster;
-    
-    if(toasterId != ''){
-        toaster = $('#'+toasterId);
+
+    if (toasterId != '') {
+        toaster = $('#' + toasterId);
     }
-    else{
+    else {
         toaster = $('.toaster');
     }
 
-    var alert = $('<div class="alert alert-info mb-0 border-0 py-2 text-center"></alert>');
+    if (toaster.find('.alert').length) {
+        toaster.empty();
+    }
+
+    var alert = $('<div class="alert alert-'+ alertType +' mb-0 border-0 py-2 text-center"></alert>');
 
     alert
         .html(message)
         .appendTo(toaster);
 
-    toaster.fadeIn(500).delay(2000).fadeOut(500, function(){$(this).empty()});
+    toaster.fadeIn(500).delay(2000).fadeOut(500, function () { $(this).empty() });
 }
 
 // jQuery plugin to re-adjust DataTables columns and recalcualte responsive breakpoints when going from hidden to shown
