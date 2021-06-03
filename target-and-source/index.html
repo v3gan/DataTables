@@ -107,10 +107,7 @@
                   id="divSourceStudentListButtons"
                   class="col-md-2 collapse source-student-list"
                 ></div>
-                <div
-                  id="divSourceStudentListMessage"
-                  class="col-md-5"
-                ></div>
+                <div id="divSourceStudentListMessage" class="col-md-5"></div>
               </div>
             </div>
           </div>
@@ -124,79 +121,80 @@
 
       function CreateTargetDataTable() {
         var dt = $("#targetStudentList").DataTable({
-            responsive: {
-              details: {
-                renderer: renderDefaultTable,
+          responsive: {
+            details: {
+              renderer: renderDefaultTable,
+            },
+          },
+          autoWidth: false,
+          select: "multi",
+          columns: [
+            {
+              title: "Student Id",
+              data: "StudentId",
+              name: "student-id",
+            },
+            {
+              title: "First Name",
+              data: "FirstName",
+            },
+            {
+              title: "Last Name",
+              data: "LastName",
+            },
+            {
+              title: "Email",
+              data: "Email",
+            },
+          ],
+          buttons: [
+            {
+              text: '<i class="bi bi-person-plus-fill"></i> Add Students',
+              attr: {
+                class: "btn btn-success btn-sm mr-2",
+              },
+              action: function (e, dt, node, config) {
+                CreateSourceDataTable();
+                $("#sourceStudentListModal").modal();
               },
             },
-            autoWidth: false,
-            select: 'multi',
-            columns: [
-              {
-                title: "Student Id",
-                data: "StudentId",
-                name: "student-id",
-              },
-              {
-                title: "First Name",
-                data: "FirstName",
-              },
-              {
-                title: "Last Name",
-                data: "LastName",
-              },
-              {
-                title: "Email",
-                data: "Email",
-              },
-            ],
-            buttons: [
             {
-                text: '<i class="bi bi-person-plus-fill"></i> Add Students',
-                attr: {
-                  class: "btn btn-success btn-sm mr-2",
-                },
-                action: function (e, dt, node, config) {
-                  CreateSourceDataTable();
-                  $('#sourceStudentListModal').modal();
-                }
+              text: '<i class="bi bi-person-dash-fill"></i> Remove Selected Students',
+              attr: {
+                class: "btn btn-danger btn-sm mr-2",
               },
-              {
-                text: '<i class="bi bi-person-dash-fill"></i> Remove Selected Students',
-                attr: {
-                  class: "btn btn-danger btn-sm mr-2",
-                },
-                action: function (e, dt, node, config) {
-                  // get the selected rows
+              action: function (e, dt, node, config) {
+                // get the selected rows
 
-                  var selectedRows = dt.rows({ selected: true });
+                var selectedRows = dt.rows({ selected: true });
 
-                  // get the number of rows selected
+                // get the number of rows selected
 
-                  var selectedRowsCount = selectedRows.count();
+                var selectedRowsCount = selectedRows.count();
 
-                  // remove the selected rows and redraw the table
+                // remove the selected rows and redraw the table
 
-                  selectedRows.remove().draw();
+                selectedRows.remove().draw();
 
-                  // show a message
+                // show a message
 
-                  var message = `${selectedRowsCount} student${
-                    selectedRowsCount == 1 ? " was" : "s were"
-                  } removed.`;
+                var message = `${selectedRowsCount} student${
+                  selectedRowsCount == 1 ? " was" : "s were"
+                } removed.`;
 
-                  showToastAlertMessage(message, "divTargetStudentListMessage");
-                },
-              }
-            ],
-            initComplete: function(settings, json){
-              var dt = $("#targetStudentList").DataTable();
-              dt.buttons().container()
-                        .addClass('mb-1')
-                        .removeClass('btn-group')
-                        .appendTo($('#divTargetStudentListButtons'));
-            }
-          });
+                showToastAlertMessage(message, "divTargetStudentListMessage");
+              },
+            },
+          ],
+          initComplete: function (settings, json) {
+            var dt = $("#targetStudentList").DataTable();
+            dt.buttons()
+              .container()
+              .addClass("mb-1")
+              .removeClass("btn-group")
+              .appendTo($("#divTargetStudentListButtons"));
+          },
+        });
       }
 
       function CreateSourceDataTable() {
@@ -224,14 +222,15 @@
                     $("#divNoSourceStudentList").show();
                   }
                 }
-              }
-            },      
-            initComplete: function(settings, json){              
+              },
+            },
+            initComplete: function (settings, json) {
               var dt = $("#sourceStudentList").DataTable();
-              dt.buttons().container()
-                        .addClass('mb-1')
-                        .removeClass('btn-group')
-                        .appendTo($('#divSourceStudentListButtons'));
+              dt.buttons()
+                .container()
+                .addClass("mb-1")
+                .removeClass("btn-group")
+                .appendTo($("#divSourceStudentListButtons"));
             },
             columns: [
               {

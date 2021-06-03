@@ -3,24 +3,35 @@
     "StudentId": "1",
     "FirstName": "Charles",
     "LastName": "Xavier",
-    "Email": "profx@gmail.com"
-  },
-  {
+    "Email": "profx@gmail.com",
+    "Gender": "Male"
+    },
+    {
     "StudentId": "2",
     "FirstName": "Eric",
     "LastName": "Lehnsherr",
-    "Email": "magman@gmail.com"
-  },
-  {
+    "Email": "magman@gmail.com",
+    "Gender": "Male"
+    },
+    {
     "StudentId": "3",
     "FirstName": "James",
     "LastName": "Howlett",
-    "Email": "shredder@gmail.com"
-  },
-  {
+    "Email": "shredder@gmail.com",
+    "Gender": "Male"
+    },
+    {
     "StudentId": "4",
     "FirstName": "Jean",
     "LastName": "Grey",
-    "Email": "ashes@gmail.com"
-  }
+    "Email": "ashes@gmail.com",
+    "Gender": "Female"
+    },
+    {
+    "StudentId": "5",
+    "FirstName": "Venom",
+    "LastName": "Symbiote",
+    "Email": "host@gmail.com",
+    "Gender": "Non-Binary"
+    }
 ]

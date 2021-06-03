@@ -37,7 +37,7 @@ function showToastAlertMessage(message, toasterId = '', alertType = 'info') {
         toaster.empty();
     }
 
-    var alert = $('<div class="alert alert-'+ alertType +' mb-0 border-0 py-2 text-center"></alert>');
+    var alert = $('<div class="alert alert-'+ alertType +' mb-0 border-0 py-2 text-center" role="alert"></alert>');
 
     alert
         .html(message)
